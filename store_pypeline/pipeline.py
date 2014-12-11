@@ -41,11 +41,12 @@ class Pipeline(pypeline.Pipeline):
         self.redis.publish(self.actions_channel, data)
         last_action = self.action_list[0] if failed else self.action_list[-1]
         if act == last_action:
-            msg = 'Faield when execute {0} forward'.format(self._failed_action.__class__.__name__)
             self.redis.publish(self.actions_channel, "JOB-FINISHED")
-            self.redis.publish(self.stderr_channel, traceback.format_exc(self._failed_err))
-            self.redis.publish(self.stderr_channel, msg)
-            sys.exit(1)
+            if failed:
+                msg = 'Failed when execute {0} forward'.format(self._failed_action.__class__.__name__)
+                self.redis.publish(self.stderr_channel, traceback.format_exc(self._failed_err))
+                self.redis.publish(self.stderr_channel, msg)
+                sys.exit(1)
 
     def on_failed(self, act, ctx, e):
         data = json.dumps(self.act_to_dict(act, {'status': 'failed'}))
