@@ -10,7 +10,6 @@
 
 
 from setuptools import setup, find_packages
-# from store_pypeline.version import __version__
 __version__ = "0.0.1"
 
 tests_require = [
@@ -51,7 +50,7 @@ an incredible python package
     packages=find_packages(),
     include_package_data=False,
     install_requires=[
-        'pypeline',
+        'pypeline>=0.0.2',
         # add your dependencies here
         # remember to use 'package-name>=x.y.z,<x.y+1.0' notation (this way you get bugfixes)
     ],
