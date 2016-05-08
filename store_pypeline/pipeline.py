@@ -36,9 +36,7 @@ class Pipeline(exec_pypeline.Pipeline):
         self.notify_actions()
 
     def notify_actions(self):
-        data = {'actions': []}
-        for i, action in enumerate(self.action_list):
-            d = action.to_dict()
-            d.update({'index': i})
-            data['actions'].append(d)
-        self.redis.publish(self.actions_channel, json.dumps(data))
+        self.redis.publish(
+            self.actions_channel,
+            json.dumps(self.actions_to_dict())
+        )
