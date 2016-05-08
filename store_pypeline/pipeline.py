@@ -32,45 +32,38 @@ class Pipeline(pypeline.Pipeline):
         self._failed_action = None
         self._failed_err = None
 
+    def publish_action(self, act):
+        self.redis.publish(self.actions_channel, act.to_dict())
+
     def before_action(self, act, ctx, failed):
-        data = json.dumps(self.act_to_dict(act, {'status': 'doing' if not failed else 'undoing'}))
-        self.redis.publish(self.actions_channel, data)
+        self.notify_actions()
 
     def after_action(self, act, ctx, failed):
-        data = json.dumps(self.act_to_dict(act, {'status': 'done' if not failed else 'undone'}))
-        self.redis.publish(self.actions_channel, data)
-        last_action = self.action_list[0] if failed else self.action_list[-1]
-        if act == last_action:
-            self.redis.publish(self.actions_channel, "JOB-FINISHED")
-            if failed:
-                msg = 'Failed when execute {0} forward'.format(self._failed_action.__class__.__name__)
-                self.redis.publish(self.stderr_channel, traceback.format_exc(self._failed_err))
-                self.redis.publish(self.stderr_channel, msg)
-                sys.exit(1)
+        self.notify_actions()
+
+    # def after_action(self, act, ctx, failed):
+    #     self.publish_action(act)
+    #     last_action = self.action_list[0] if failed else self.action_list[-1]
+    #     if act == last_action:
+    #         self.redis.publish(self.actions_channel, "JOB-FINISHED")
+    #         if failed:
+    #             msg = 'Failed when execute {0} forward'.format(self._failed_action.__class__.__name__)
+    #             self.redis.publish(self.stderr_channel, traceback.format_exc(self._failed_err))
+    #             self.redis.publish(self.stderr_channel, msg)
+    #             sys.exit(1)
 
     def on_failed(self, act, ctx, e):
-        data = json.dumps(self.act_to_dict(act, {'status': 'failed'}))
-        self.redis.publish(self.actions_channel, data)
+        self.publish_action(act)
         self._failed_action = act
         self._failed_err = e
 
     def notify_actions(self):
         data = {'actions': []}
         for i, action in enumerate(self.action_list):
-            action.__index = i
-            data['actions'].append(self.act_to_dict(action))
+            d = action.to_dict()
+            d.update({'index': i})
+            data['actions'].append(d)
         self.redis.publish(self.actions_channel, json.dumps(data))
-
-    def act_to_dict(self, act, data=None):
-        if data is None:
-            data = {}
-        dict_act = {
-            'name': act.name,
-            'status': 'queued',
-            'index': act.__index,
-        }
-        dict_act.update(data)
-        return dict_act
 
 
 class Action(pypeline.Action):
