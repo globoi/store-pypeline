@@ -10,7 +10,7 @@
 
 
 from setuptools import setup, find_packages
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 tests_require = [
     'mock',
@@ -25,7 +25,7 @@ tests_require = [
 ]
 
 setup(
-    name='store_pypeline',
+    name='store-pypeline',
     version=__version__,
     description='an incredible python package',
     long_description='''
@@ -50,7 +50,7 @@ an incredible python package
     packages=find_packages(),
     include_package_data=False,
     install_requires=[
-        'pypeline>=0.2.0',
+        'exec-pypeline>=0.2.0',
         # add your dependencies here
         # remember to use 'package-name>=x.y.z,<x.y+1.0' notation (this way you get bugfixes)
     ],

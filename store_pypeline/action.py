@@ -8,8 +8,8 @@
 # http://www.opensource.org/licenses/MIT-license
 # Copyright (c) 2014 Rafael Floriano da Silva rflorianobr@gmail.com
 
-import pypeline
+import exec_pypeline
 
 
-class Action(pypeline.Action):
+class Action(exec_pypeline.Action):
     pass
