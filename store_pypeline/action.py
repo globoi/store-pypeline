@@ -9,7 +9,11 @@
 # Copyright (c) 2014 Rafael Floriano da Silva rflorianobr@gmail.com
 
 import exec_pypeline
+from store_pypeline import store
 
 
-class Action(exec_pypeline.Action):
-    pass
+class Action(exec_pypeline.Action, store.Store):
+    def __init__(self, name=None, *args, **kwargs):
+        if name is not None:
+            self.name = name
+        exec_pypeline.Action.__init__(self, *args, **kwargs)
