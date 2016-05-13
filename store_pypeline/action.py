@@ -17,3 +17,4 @@ class Action(exec_pypeline.Action, store.Store):
         if name is not None:
             self.name = name
         exec_pypeline.Action.__init__(self, *args, **kwargs)
+        store.Store.__init__(self)

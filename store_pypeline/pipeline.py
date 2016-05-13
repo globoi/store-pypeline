@@ -50,8 +50,7 @@ class Pipeline(exec_pypeline.Pipeline, store.Store):
 
     def _set_redis_for_actions(self):
         for action in self.action_list:
-            action.redis = self.redis
-            action.channel = self.actions_channel
+            action.initialize(self.redis, self.channel, self.log_method)
 
     def before_forward(self, act, ctx, exception):
         self.log(act.name)

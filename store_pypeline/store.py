@@ -2,7 +2,10 @@ import json
 
 
 class BaseStore(object):
-    def __init__(self, redis, channel, log_method):
+    def __init__(self, redis=None, channel=None, log_method=None):
+        self.initialize(redis, channel, log_method)
+
+    def initialize(self, redis, channel, log_method):
         self.redis = redis
         self.channel = channel
         self.log_method = log_method
