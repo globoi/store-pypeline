@@ -22,9 +22,15 @@ class Pipeline(exec_pypeline.Pipeline, store.Store):
     action_list = None
 
     def __init__(self, action_list=None, sentinel_hosts=None, redis_master=None,
-                 actions_channel=None, redis_session=None, log_method=logging.debug):
+                 actions_channel=None, redis_session=None, pipeline=None, log_method=logging.debug):
         if actions_channel is None:
             actions_channel = os.environ['ACTIONS']
+
+        self.pipeline = pipeline
+        if pipeline is None:
+            self.pipeline = json.loads(os.environ.get('PIPELINE', 'null'))
+            if self.pipeline is None:
+                self.pipeline = []
 
         if redis_session is None:
             if sentinel_hosts is None:
@@ -58,6 +64,10 @@ class Pipeline(exec_pypeline.Pipeline, store.Store):
     def before_backward(self, act, ctx, exception):
         if exception:
             self.log(act.to_dict().get('error', {}).get('traceback'))
+
+    def actions_to_dict(self, *args, **kwargs):
+        actions = super(Pipeline, self).actions_to_dict(*args, **kwargs)
+        return self.pipeline + actions
 
     def before_action(self, act, ctx, exception):
         self.notify_actions()
