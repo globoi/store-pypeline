@@ -2,13 +2,13 @@ import json
 
 
 class BaseStore(object):
-    def __init__(self, redis=None, channel=None, log_method=None):
-        self.initialize(redis, channel, log_method)
+    def __init__(self, redis=None, channel=None, stderr=None):
+        self.initialize(redis, channel, stderr)
 
-    def initialize(self, redis, channel, log_method):
+    def initialize(self, redis, channel, stderr):
         self.redis = redis
         self.channel = channel
-        self.log_method = log_method
+        self.stderr = stderr
 
     def _action(self, type_, data):
         self.redis.publish(
@@ -22,7 +22,8 @@ class BaseStore(object):
 
 class Store(BaseStore):
     def log(self, *args, **kwargs):
-        self.log_method(*args, **kwargs)
+        self.stderr.write(*args, **kwargs)
+        self.stderr.flush()
 
     def get(self, url, *args, **kwargs):
         '''Method to request a url via browser'''

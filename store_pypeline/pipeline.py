@@ -12,7 +12,6 @@ import json
 import os
 import sys
 import re
-import logging
 
 import exec_pypeline
 from store_pypeline import store
@@ -23,8 +22,8 @@ class Pipeline(exec_pypeline.Pipeline, store.Store):
     action_list = None
 
     def __init__(self, action_list=None, sentinel_hosts=None, redis_master=None,
-                 notify_method=sys.stdout.write, redis_session=None, pipeline=None,
-                 log_method=logging.debug):
+                 stdout=sys.stdout, redis_session=None, pipeline=None,
+                 stderr=sys.stderr):
 
         self.pipeline = pipeline
         if pipeline is None:
@@ -45,10 +44,10 @@ class Pipeline(exec_pypeline.Pipeline, store.Store):
         else:
             self.redis = redis_session
 
-        self.notify_method = notify_method
-        self.log_method = log_method
+        self.stdout = stdout
+        self.stderr = stderr
         exec_pypeline.Pipeline.__init__(self, action_list, before_action=self.before_action, after_action=self.after_action)
-        store.Store.__init__(self, self.redis, notify_method, self.log_method)
+        store.Store.__init__(self, self.redis, stdout, self.stderr)
         self._set_redis_for_actions()
         self.notify_actions()
         self._failed_action = None
@@ -56,7 +55,7 @@ class Pipeline(exec_pypeline.Pipeline, store.Store):
 
     def _set_redis_for_actions(self):
         for action in self.action_list:
-            action.initialize(self.redis, self.channel, self.log_method)
+            action.initialize(self.redis, self.channel, self.stderr)
 
     def before_forward(self, act, ctx, exception):
         self.log(act.name)
@@ -76,4 +75,5 @@ class Pipeline(exec_pypeline.Pipeline, store.Store):
         self.notify_actions()
 
     def notify_actions(self):
-        self.notify_method(json.dumps(self.actions_to_dict()))
+        self.stdout.write(json.dumps(self.actions_to_dict()))
+        self.stdout.flush()
