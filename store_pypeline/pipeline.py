@@ -10,6 +10,7 @@
 
 import json
 import os
+import sys
 import re
 import logging
 
@@ -22,9 +23,8 @@ class Pipeline(exec_pypeline.Pipeline, store.Store):
     action_list = None
 
     def __init__(self, action_list=None, sentinel_hosts=None, redis_master=None,
-                 actions_channel=None, redis_session=None, pipeline=None, log_method=logging.debug):
-        if actions_channel is None:
-            actions_channel = os.environ['ACTIONS']
+                 notify_method=sys.stdout.write, redis_session=None, pipeline=None,
+                 log_method=logging.debug):
 
         self.pipeline = pipeline
         if pipeline is None:
@@ -45,10 +45,10 @@ class Pipeline(exec_pypeline.Pipeline, store.Store):
         else:
             self.redis = redis_session
 
-        self.actions_channel = actions_channel
+        self.notify_method = notify_method
         self.log_method = log_method
         exec_pypeline.Pipeline.__init__(self, action_list, before_action=self.before_action, after_action=self.after_action)
-        store.Store.__init__(self, self.redis, self.actions_channel, self.log_method)
+        store.Store.__init__(self, self.redis, notify_method, self.log_method)
         self._set_redis_for_actions()
         self.notify_actions()
         self._failed_action = None
@@ -76,7 +76,4 @@ class Pipeline(exec_pypeline.Pipeline, store.Store):
         self.notify_actions()
 
     def notify_actions(self):
-        self.redis.publish(
-            self.actions_channel,
-            json.dumps(self.actions_to_dict())
-        )
+        self.notify_method(json.dumps(self.actions_to_dict()))
