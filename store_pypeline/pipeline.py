@@ -75,5 +75,5 @@ class Pipeline(exec_pypeline.Pipeline, store.Store):
         self.notify_actions()
 
     def notify_actions(self):
-        self.stdout.write(json.dumps(self.actions_to_dict()))
+        self.stdout.write(json.dumps(self.actions_to_dict()) + '\n')
         self.stdout.flush()
