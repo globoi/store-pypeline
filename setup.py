@@ -10,7 +10,7 @@
 
 
 from setuptools import setup, find_packages
-__version__ = "0.1.8"
+__version__ = "0.1.9"
 
 tests_require = [
     'mock',
@@ -51,7 +51,7 @@ an incredible python package
     include_package_data=False,
     install_requires=[
         'redis>=2.10.5,<2.11',
-        'exec-pypeline>=0.3.0,<0.4.0',
+        'exec-pypeline>=0.4.0,<0.5.0',
         # add your dependencies here
         # remember to use 'package-name>=x.y.z,<x.y+1.0' notation (this way you get bugfixes)
     ],

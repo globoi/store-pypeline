@@ -21,8 +21,8 @@ class BaseStore(object):
 
 
 class Store(BaseStore):
-    def log(self, *args, **kwargs):
-        self.stderr.write(*args, **kwargs)
+    def log(self, message):
+        self.stderr.write(message + '\n')
         self.stderr.flush()
 
     def get(self, url, *args, **kwargs):
