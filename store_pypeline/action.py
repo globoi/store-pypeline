@@ -12,9 +12,14 @@ import exec_pypeline
 from store_pypeline import store
 
 
-class Action(exec_pypeline.Action, store.Store):
+class Action(exec_pypeline.Action, store.ActionStore):
     def __init__(self, name=None, *args, **kwargs):
         if name is not None:
             self.name = name
         exec_pypeline.Action.__init__(self, *args, **kwargs)
-        store.Store.__init__(self)
+        store.Store.__init__(self, *args, **kwargs)
+
+    def to_dict(self):
+        data = exec_pypeline.Action.to_dict(self)
+        data.update(store.ActionStore.to_dict(self))
+        return data

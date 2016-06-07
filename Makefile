@@ -15,7 +15,7 @@ no_targets__:
 
 # install all dependencies (do not forget to create a virtualenv first)
 setup:
-	@pip install -U -e .\[tests\]
+	@pip install -U -e .\[tests\] -i https://artifactory.globoi.com/artifactory/api/pypi/pypi-all/simple/
 
 # test your application (tests in the tests/ directory)
 test: unit

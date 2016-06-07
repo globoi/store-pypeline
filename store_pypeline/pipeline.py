@@ -15,47 +15,36 @@ import re
 
 import exec_pypeline
 from store_pypeline import store
-from redis.sentinel import Sentinel
 
 
 class Pipeline(exec_pypeline.Pipeline, store.Store):
     action_list = None
 
-    def __init__(self, action_list=None, sentinel_hosts=None, redis_master=None,
-                 stdout=sys.stdout, redis_session=None, pipeline=None,
-                 stderr=sys.stderr):
-
+    def __init__(self, action_list=None, pipeline=None, stdout=None, stderr=None):
         self.pipeline = pipeline
         if pipeline is None:
             self.pipeline = json.loads(os.environ.get('PIPELINE', 'null'))
             if self.pipeline is None:
                 self.pipeline = []
 
-        if redis_session is None:
-            if sentinel_hosts is None:
-                sentinel_hosts = os.environ['SENTINEL_HOSTS']
+        if stdout is None:
+            stdout = sys.stdout
 
-            if redis_master is None:
-                redis_master = os.environ['REDIS_MASTER']
-
-            sentinel_hosts = re.findall('((?:\d{1,3}\.?){4})', sentinel_hosts)
-            sentinel_hosts = zip(sentinel_hosts[0::2], sentinel_hosts[1::2])
-            self.redis = Sentinel(sentinel_hosts).master_for(redis_master)
-        else:
-            self.redis = redis_session
+        if stderr is None:
+            stderr = sys.stderr
 
         self.stdout = stdout
         self.stderr = stderr
-        exec_pypeline.Pipeline.__init__(self, action_list, before_action=self.before_action, after_action=self.after_action)
-        store.Store.__init__(self, self.redis, stdout, self.stderr)
-        self._set_redis_for_actions()
+        exec_pypeline.Pipeline.__init__(self, action_list or self.action_list, before_action=self.before_action, after_action=self.after_action)
+        store.Store.__init__(self, self.stdout, self.stderr)
+        self._init_actions()
         self.notify_actions()
         self._failed_action = None
         self._failed_err = None
 
-    def _set_redis_for_actions(self):
+    def _init_actions(self):
         for action in self.action_list:
-            action.initialize(self.redis, self.channel, self.stderr)
+            action.initialize(self.stdout, self.stderr)
 
     def before_forward(self, act, ctx, exception):
         self.log(act.name)

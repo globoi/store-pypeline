@@ -1,23 +1,22 @@
+import uuid
 import json
 
 
 class BaseStore(object):
-    def __init__(self, redis=None, channel=None, stderr=None):
-        self.initialize(redis, channel, stderr)
+    def __init__(self, stdout=None, stderr=None):
+        self.initialize(stdout, stderr)
 
-    def initialize(self, redis, channel, stderr):
-        self.redis = redis
-        self.channel = channel
+    def initialize(self, stdout, stderr):
+        self._instructions = []
+        self.stdout = stdout
         self.stderr = stderr
 
-    def _action(self, type_, data):
-        self.redis.publish(
-            self.channel,
-            json.dumps({
-                'type': type_,
-                'data': data,
-            })
-        )
+    def _instruction(self, type_, data):
+        self._instructions.append({
+            'id': str(uuid.uuid4()),
+            'type': type_,
+            'data': data,
+        })
 
 
 class Store(BaseStore):
@@ -25,13 +24,19 @@ class Store(BaseStore):
         self.stderr.write(message + '\n')
         self.stderr.flush()
 
+
+class ActionStore(Store):
     def get(self, url, *args, **kwargs):
-        '''Method to request a url via browser'''
-        return self._action('request', {
+        return self._instruction('get', {
             'url': url,
             'args': args,
             'kwargs': kwargs
         })
 
     def redirect(self, url):
-        return self._action('redirect', url)
+        return self._instruction('redirect', url)
+
+    def to_dict(self):
+        return {
+            'instructions': self._instructions
+        }
