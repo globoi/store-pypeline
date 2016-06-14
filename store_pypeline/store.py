@@ -1,5 +1,4 @@
 import uuid
-import json
 
 
 class BaseStore(object):
@@ -21,7 +20,7 @@ class BaseStore(object):
 
 class Store(BaseStore):
     def log(self, message):
-        self.stderr.write(message + '\n')
+        self.stderr.write("\033[93m" + message + "\033[0m" + "\n")
         self.stderr.flush()
 
 
