@@ -1,8 +1,9 @@
+import sys
 import uuid
 
 
 class BaseStore(object):
-    def __init__(self, stdout=None, stderr=None):
+    def __init__(self, stdout=sys.stdout, stderr=sys.stderr):
         self.initialize(stdout, stderr)
 
     def initialize(self, stdout, stderr):
@@ -20,9 +21,6 @@ class BaseStore(object):
 
 class Store(BaseStore):
     def log(self, message):
-        if not self.stderr:
-            return
-
         self.stderr.write("\033[93m" + message + "\033[0m" + "\n")
         self.stderr.flush()
 
