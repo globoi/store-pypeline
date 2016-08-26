@@ -21,6 +21,9 @@ class BaseStore(object):
 
 class Store(BaseStore):
     def log(self, message):
+        if not (message and type(message) == str):
+            return
+
         self.stderr.write("\033[93m" + message + "\033[0m" + "\n")
         self.stderr.flush()
 
