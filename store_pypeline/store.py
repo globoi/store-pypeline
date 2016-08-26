@@ -1,6 +1,8 @@
 import sys
 import uuid
 
+import six
+
 
 class BaseStore(object):
     def __init__(self, stdout=sys.stdout, stderr=sys.stderr):
@@ -21,7 +23,7 @@ class BaseStore(object):
 
 class Store(BaseStore):
     def log(self, message):
-        if not (message and type(message) == str):
+        if not (message and isinstance(message, six.string_types)):
             return
 
         self.stderr.write("\033[93m" + message + "\033[0m" + "\n")

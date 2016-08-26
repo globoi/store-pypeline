@@ -51,6 +51,7 @@ an incredible python package
     include_package_data=False,
     install_requires=[
         'exec-pypeline>=0.4.0,<0.5.0',
+        'six'
         # add your dependencies here
         # remember to use 'package-name>=x.y.z,<x.y+1.0' notation (this way you get bugfixes)
     ],
