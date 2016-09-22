@@ -18,9 +18,9 @@ from store_pypeline import store
 
 
 class Pipeline(exec_pypeline.Pipeline, store.Store):
-    action_list = None
 
     def __init__(self, action_list=None, pipeline=None, stdout=None, stderr=None):
+        self.action_list = action_list or []
         self.pipeline = pipeline
         if pipeline is None:
             self.pipeline = json.loads(os.environ.get('PIPELINE', 'null'))
@@ -49,8 +49,11 @@ class Pipeline(exec_pypeline.Pipeline, store.Store):
         self._failed_err = None
 
     def _init_actions(self):
-        for action in self.action_list:
-            action.initialize(self.stdout, self.stderr)
+        if self.action_list:
+            for action in self.action_list:
+                action.initialize(self.stdout, self.stderr)
+        else:
+            self.log("No action to intialize")
 
     def before_forward(self, act, ctx):
         self.log(u'Running action - {0}'.format(act.name))
