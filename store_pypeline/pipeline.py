@@ -19,7 +19,7 @@ from store_pypeline import store
 
 class Pipeline(exec_pypeline.Pipeline, store.Store):
 
-    def __init__(self, action_list=None, pipeline=None, stdout=None, stderr=None):
+    def __init__(self, action_list=None, pipeline=None, stdout=None, stderr=None, recovery=None):
         self.action_list = action_list or []
         self.pipeline = pipeline
         if pipeline is None:
@@ -40,7 +40,8 @@ class Pipeline(exec_pypeline.Pipeline, store.Store):
             before_action=self.before_action,
             after_action=self.after_action,
             before_forward=self.before_forward,
-            before_backward=self.before_backward
+            before_backward=self.before_backward,
+            recovery=recovery
         )
         store.Store.__init__(self, self.stdout, self.stderr)
         self._init_actions()
