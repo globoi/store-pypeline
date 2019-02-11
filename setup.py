@@ -10,7 +10,7 @@
 
 
 from setuptools import setup, find_packages
-__version__ = "0.1.12"
+__version__ = "1.0.0"
 
 tests_require = [
     'mock',
