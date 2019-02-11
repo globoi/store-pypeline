@@ -50,7 +50,7 @@ an incredible python package
     packages=find_packages(),
     include_package_data=False,
     install_requires=[
-        'exec-pypeline>=0.4.0,<0.5.0',
+        'exec-pypeline>=0.5.0,<0.6.0',
         'six'
         # add your dependencies here
         # remember to use 'package-name>=x.y.z,<x.y+1.0' notation (this way you get bugfixes)
