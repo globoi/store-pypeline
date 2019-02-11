@@ -17,7 +17,7 @@ import exec_pypeline
 from store_pypeline import store
 
 
-class Pipeline(exec_pypeline.Pipeline, store.Store):
+class Pipeline(exec_pypeline.PipelineUnsafe, store.Store):
 
     def __init__(self, action_list=None, pipeline=None, stdout=None, stderr=None, recovery=None):
         self.action_list = action_list or []
