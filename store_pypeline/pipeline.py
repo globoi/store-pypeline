@@ -12,6 +12,7 @@ import json
 import os
 import sys
 import re
+import codecs
 
 import exec_pypeline
 from store_pypeline import store
@@ -28,10 +29,10 @@ class Pipeline(exec_pypeline.Pipeline, store.Store):
                 self.pipeline = []
 
         if stdout is None:
-            stdout = sys.stdout
+            stdout = codecs.getwriter('utf-8')(sys.stdout)
 
         if stderr is None:
-            stderr = sys.stderr
+            stderr = codecs.getwriter('utf-8')(sys.stderr)
 
         self.stdout = stdout
         self.stderr = stderr
