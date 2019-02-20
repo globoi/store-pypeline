@@ -1,11 +1,13 @@
 import sys
 import uuid
+import logging
 
 import six
 
 
 class BaseStore(object):
     def __init__(self, stdout=sys.stdout, stderr=sys.stderr):
+        self.logger = logging.getLogger(__package__)
         self.initialize(stdout, stderr)
 
     def initialize(self, stdout, stderr):
@@ -26,8 +28,7 @@ class Store(BaseStore):
         if not (message and isinstance(message, six.string_types)):
             return
 
-        self.stderr.write("\033[93m" + message + "\033[0m" + "\n")
-        self.stderr.flush()
+        self.logger.info(message)
 
 
 class ActionStore(Store):

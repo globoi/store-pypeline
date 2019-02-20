@@ -55,16 +55,16 @@ class Pipeline(exec_pypeline.Pipeline, store.Store):
             for action in self.action_list:
                 action.initialize(self.stdout, self.stderr)
         else:
-            self.log("No action to intialize")
+            self.logger.info("No action to intialize")
 
     def before_forward(self, act, ctx):
-        self.log(u'Running action - {0}'.format(act.name))
+        self.logger.info(u'Running action - {0}'.format(act.name))
 
     def before_backward(self, act, ctx):
-        self.log(u'Rolling back - {0}'.format(act.name))
+        self.logger.info(u'Rolling back - {0}'.format(act.name))
         error = act.to_dict().get('error', {})
         if error:
-            self.log(error.get('traceback'))
+            self.logger.error(error.get('traceback'))
 
     def actions_to_dict(self, *args, **kwargs):
         actions = super(Pipeline, self).actions_to_dict(*args, **kwargs)
@@ -77,5 +77,4 @@ class Pipeline(exec_pypeline.Pipeline, store.Store):
         self.notify_actions()
 
     def notify_actions(self):
-        self.stdout.write(json.dumps(self.actions_to_dict()) + '\n')
-        self.stdout.flush()
+        self.logger.info(json.dumps(self.actions_to_dict()) + '\n')
