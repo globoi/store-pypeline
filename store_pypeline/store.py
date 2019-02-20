@@ -1,9 +1,11 @@
 import sys
 import uuid
 import logging
+import warnings
 
 import six
 
+from .exceptions import StoreDeprecationWarning
 
 class BaseStore(object):
     def __init__(self, stdout=sys.stdout, stderr=sys.stderr):
@@ -25,6 +27,7 @@ class BaseStore(object):
 
 class Store(BaseStore):
     def log(self, message):
+        warnings.warn("The Store.log method has been replaced. Use Store.logger instead.", StoreDeprecationWarning)
         if not (message and isinstance(message, six.string_types)):
             return
 

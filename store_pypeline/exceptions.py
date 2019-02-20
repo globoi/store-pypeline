@@ -1,0 +1,2 @@
+class StoreDeprecationWarning(DeprecationWarning):
+    pass
