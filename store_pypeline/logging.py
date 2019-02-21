@@ -6,12 +6,12 @@ import sys
 import codecs
 
 
-class ExactLevel(object):
-    def __init__(self, level):
-        self._level = level
+class InLevel(object):
+    def __init__(self, level_list):
+        self._level_list = level_list
 
     def filter(self, record):
-        return record.levelno == self._level
+        return record.levelno in self._level_list
 
 
 def setup_handlers(logger, stdout=None, stderr=None):
@@ -21,8 +21,8 @@ def setup_handlers(logger, stdout=None, stderr=None):
         stderr = codecs.getwriter('utf-8')(sys.stderr)
 
     stdout_handler = logging.StreamHandler(stream=stdout)
-    stdout_handler.addFilter(ExactLevel(logging.INFO))
-    stderr_handler = logging.StreamHandler(stream=stderr)
-    stderr_handler.addFilter(ExactLevel(logging.ERROR))
+    stdout_handler.addFilter(InLevel([logging.INFO]))
     logger.addHandler(stdout_handler)
+    stderr_handler = logging.StreamHandler(stream=stderr)
+    stderr_handler.addFilter(InLevel([logging.ERROR]))
     logger.addHandler(stderr_handler)
