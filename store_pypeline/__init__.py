@@ -7,6 +7,7 @@
 # Licensed under the MIT license:
 # http://www.opensource.org/licenses/MIT-license
 # Copyright (c) 2014 Rafael Floriano da Silva rflorianobr@gmail.com
+from __future__ import absolute_import
 
 import warnings
 
@@ -16,3 +17,6 @@ from .exceptions import StoreDeprecationWarning
 
 
 warnings.simplefilter("default", StoreDeprecationWarning)
+
+import logging
+logging.basicConfig(level=logging.DEBUG)
