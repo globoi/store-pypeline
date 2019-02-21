@@ -8,7 +8,6 @@ import warnings
 import six
 
 from .exceptions import StoreDeprecationWarning
-from .logging import setup_handlers
 
 
 class BaseStore(object):
@@ -20,7 +19,6 @@ class BaseStore(object):
         self._instructions = []
         self.stdout = stdout
         self.stderr = stderr
-        setup_handlers(self.logger, self.stdout, self.stderr)
 
     def _instruction(self, type_, data):
         self._instructions.append({
