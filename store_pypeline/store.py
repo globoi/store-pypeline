@@ -13,6 +13,7 @@ from .exceptions import StoreDeprecationWarning
 class BaseStore(object):
     def __init__(self, stdout=sys.stdout, stderr=sys.stderr):
         self.logger = logging.getLogger(__package__)
+        self.logger.setLevel(logging.INFO)
         self.initialize(stdout, stderr)
 
     def initialize(self, stdout, stderr):
