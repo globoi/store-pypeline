@@ -17,6 +17,3 @@ from .exceptions import StoreDeprecationWarning
 
 
 warnings.simplefilter("default", StoreDeprecationWarning)
-
-import logging
-logging.basicConfig(format='%(message)s', level=logging.INFO)
