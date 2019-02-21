@@ -19,4 +19,4 @@ from .exceptions import StoreDeprecationWarning
 warnings.simplefilter("default", StoreDeprecationWarning)
 
 import logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
