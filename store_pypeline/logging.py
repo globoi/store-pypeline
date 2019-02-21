@@ -14,11 +14,9 @@ class InLevel(object):
         return record.levelno in self._level_list
 
 
-def setup_handlers(logger, stdout=None, stderr=None):
-    if stdout is None:
-        stdout = codecs.getwriter('utf-8')(sys.stdout)
-    if stderr is None:
-        stderr = codecs.getwriter('utf-8')(sys.stderr)
+def setup_handlers(logger):
+    stdout = codecs.getwriter('utf-8')(sys.stdout)
+    stderr = codecs.getwriter('utf-8')(sys.stderr)
 
     stdout_handler = logging.StreamHandler(stream=stdout)
     stdout_handler.addFilter(InLevel([logging.INFO]))

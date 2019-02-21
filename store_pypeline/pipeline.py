@@ -46,7 +46,7 @@ class Pipeline(exec_pypeline.Pipeline, store.Store):
             recovery=recovery
         )
         store.Store.__init__(self, self.stdout, self.stderr)
-        setup_handlers(self.logger, self.stdout, self.stderr)
+        setup_handlers(self.logger)
         self._init_actions()
         self.notify_actions()
         self._failed_action = None
