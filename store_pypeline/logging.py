@@ -27,12 +27,12 @@ def create_logger():
 
     if not logging.root.handlers:
         stdout_handler = logging.StreamHandler(stream=stdout)
-        stdout_handler.addFilter(InLevel([logging.INFO]))
+        stdout_handler.addFilter(InLevel([logging.INFO, logging.WARNING]))
         stdout_handler.setLevel(logging.INFO)
         stdout_handler.setFormatter(logging.Formatter("%(message)s"))
 
         stderr_handler = logging.StreamHandler(stream=stderr)
-        stderr_handler.addFilter(InLevel([logging.ERROR]))
+        stderr_handler.addFilter(InLevel([logging.ERROR, logging.CRITICAL]))
         stderr_handler.setFormatter(logging.Formatter("%(message)s"))
 
         logger.addHandler(stdout_handler)
