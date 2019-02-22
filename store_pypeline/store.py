@@ -2,18 +2,14 @@ from __future__ import absolute_import
 
 import sys
 import uuid
-import logging
-import warnings
 
 import six
 
-from .exceptions import StoreDeprecationWarning
+from .logging import LogMixin
 
 
 class BaseStore(object):
     def __init__(self, stdout=sys.stdout, stderr=sys.stderr):
-        self.logger = logging.getLogger(__package__)
-        self.logger.setLevel(logging.INFO)
         self.initialize(stdout, stderr)
 
     def initialize(self, stdout, stderr):
@@ -29,13 +25,8 @@ class BaseStore(object):
         })
 
 
-class Store(BaseStore):
-    def log(self, message):
-        warnings.warn("The Store.log method has been replaced. Use Store.logger instead.", StoreDeprecationWarning)
-        if not (message and isinstance(message, six.string_types)):
-            return
-
-        self.logger.info(message)
+class Store(BaseStore, LogMixin):
+    pass
 
 
 class ActionStore(Store):

@@ -16,7 +16,6 @@ import codecs
 
 import exec_pypeline
 from store_pypeline import store
-from .logging import setup_handlers
 
 
 class Pipeline(exec_pypeline.Pipeline, store.Store):
@@ -46,7 +45,7 @@ class Pipeline(exec_pypeline.Pipeline, store.Store):
             recovery=recovery
         )
         store.Store.__init__(self, self.stdout, self.stderr)
-        setup_handlers(self.logger)
+
         self._init_actions()
         self.notify_actions()
         self._failed_action = None
