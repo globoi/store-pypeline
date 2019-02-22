@@ -19,7 +19,7 @@ class InLevel(object):
 
 
 def create_logger():
-    logger = logging.getLogger(__name__)
+    logger = logging.getLogger()
     logger.setLevel(logging.INFO)
 
     stdout = codecs.getwriter('utf-8')(sys.stdout)
